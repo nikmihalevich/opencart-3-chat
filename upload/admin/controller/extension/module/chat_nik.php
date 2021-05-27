@@ -44,7 +44,9 @@ class ControllerExtensionModuleChatNik extends Controller {
 
 		$data['cancel'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=module', true);
 
+		$data['mainLinkOperators'] = $this->url->link('extension/module/chat_nik/chatOperators', 'user_token=' . $this->session->data['user_token'], true);
 		$data['mainLinkSettings'] = $this->url->link('extension/module/chat_nik/chatSettings', 'user_token=' . $this->session->data['user_token'], true);
+		$data['mainLinkModuleChat'] = $this->url->link('extension/module/chat_nik/chatModule', 'user_token=' . $this->session->data['user_token'], true);
 
 		if (isset($this->request->post['module_chat_nik_status'])) {
 			$data['module_chat_nik_status'] = $this->request->post['module_chat_nik_status'];
@@ -59,6 +61,200 @@ class ControllerExtensionModuleChatNik extends Controller {
 		$this->response->setOutput($this->load->view('extension/module/chat_nik', $data));
 	}
 
+	public function chatOperators() {
+        $this->load->language('extension/module/chat_nik');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        $this->load->model('extension/module/chat_nik');
+
+        if (true) {
+            if (isset($this->error['warning'])) {
+                $data['error_warning'] = $this->error['warning'];
+            } else {
+                $data['error_warning'] = '';
+            }
+
+            if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+                $this->model_extension_module_chat_nik->saveChatSettings($this->request->post);
+
+                $this->session->data['success'] = $this->language->get('text_success');
+
+                $this->response->redirect($this->url->link('extension/module/chat_nik/chatModule', 'user_token=' . $this->session->data['user_token'], true));
+            }
+
+            $data['breadcrumbs'] = array();
+
+            $data['breadcrumbs'][] = array(
+                'text' => $this->language->get('text_home'),
+                'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true)
+            );
+
+            $data['breadcrumbs'][] = array(
+                'text' => $this->language->get('text_extension'),
+                'href' => $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=module', true)
+            );
+
+            $data['breadcrumbs'][] = array(
+                'text' => $this->language->get('heading_title'),
+                'href' => $this->url->link('extension/module/chat_nik', 'user_token=' . $this->session->data['user_token'], true)
+            );
+
+            $data['actionLogin'] = $this->url->link('extension/module/chat_nik/chatModule', 'user_token=' . $this->session->data['user_token'], true);
+
+            $data['cancel'] = $this->url->link('extension/module/chat_nik', 'user_token=' . $this->session->data['user_token'] . '&type=module', true);
+
+            $operators = $this->model_extension_module_chat_nik->getAllOperators();
+
+            $this->load->model('tool/image');
+
+            foreach ($operators as $k => $operator) {
+                if (!empty($operator)) {
+                    if ($operator['image']) {
+                        $operators[$k]['thumb'] = $this->model_tool_image->resize($operator['image'], 50, 50);
+                    } else {
+                        $operators[$k]['thumb'] = $this->model_tool_image->resize('no_image.png', 50, 50);
+                    }
+                }
+            }
+
+            $data['operators'] = $operators;
+
+            $data['header'] = $this->load->controller('common/header');
+            $data['column_left'] = $this->load->controller('common/column_left');
+            $data['footer'] = $this->load->controller('common/footer');
+
+            $this->response->setOutput($this->load->view('extension/module/chat_operator_login_nik', $data));
+        } else {
+            if (isset($this->error['warning'])) {
+                $data['error_warning'] = $this->error['warning'];
+            } else {
+                $data['error_warning'] = '';
+            }
+
+            if (isset($this->request->get['horizontalTab'])) {
+                $horizontalTab = $this->request->get['horizontalTab'];
+            } else {
+                $horizontalTab = 'operators';
+            }
+
+            $url = '';
+
+            if (isset($this->request->get['horizontalTab'])) {
+                $url .= '&horizontalTab=' . $horizontalTab;
+            }
+
+            if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+                $this->model_extension_module_chat_nik->saveChatSettings($this->request->post);
+
+                $this->session->data['success'] = $this->language->get('text_success');
+
+                $this->response->redirect($this->url->link('extension/module/chat_nik/chatModule', 'user_token=' . $this->session->data['user_token'], true));
+            }
+
+            $data['breadcrumbs'] = array();
+
+            $data['breadcrumbs'][] = array(
+                'text' => $this->language->get('text_home'),
+                'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true)
+            );
+
+            $data['breadcrumbs'][] = array(
+                'text' => $this->language->get('text_extension'),
+                'href' => $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=module', true)
+            );
+
+            $data['breadcrumbs'][] = array(
+                'text' => $this->language->get('heading_title'),
+                'href' => $this->url->link('extension/module/chat_nik', 'user_token=' . $this->session->data['user_token'], true)
+            );
+
+            $data['actionMainSettings'] = $this->url->link('extension/module/chat_nik/chatModule', 'user_token=' . $this->session->data['user_token'], true);
+
+            $data['cancel'] = $this->url->link('extension/module/chat_nik', 'user_token=' . $this->session->data['user_token'] . '&type=module', true);
+
+            $data['operatorsTab'] = $this->url->link('extension/module/chat_nik/chatModule', 'user_token=' . $this->session->data['user_token'] . '&horizontalTab=operators', true);
+            $data['clientsTab'] = $this->url->link('extension/module/chat_nik/chatModule', 'user_token=' . $this->session->data['user_token'] . '&horizontalTab=clients', true);
+
+            $data['horizontalTab'] = $horizontalTab;
+
+            $data['header'] = $this->load->controller('common/header');
+            $data['column_left'] = $this->load->controller('common/column_left');
+            $data['footer'] = $this->load->controller('common/footer');
+
+            $this->response->setOutput($this->load->view('extension/module/chat_operators_nik', $data));
+        }
+    }
+
+    public function chatModule() {
+        $this->load->language('extension/module/chat_nik');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        $this->load->model('setting/setting');
+        $this->load->model('extension/module/chat_nik');
+
+        if (isset($this->error['warning'])) {
+            $data['error_warning'] = $this->error['warning'];
+        } else {
+            $data['error_warning'] = '';
+        }
+
+        if (isset($this->request->get['verticalTab'])) {
+            $verticalTab = $this->request->get['verticalTab'];
+        } else {
+            $verticalTab = 'mainSettings';
+        }
+
+        $url = '';
+
+        if (isset($this->request->get['verticalTab'])) {
+            $url .= '&verticalTab=' . $verticalTab;
+        }
+
+        if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+            $this->model_extension_module_chat_nik->saveChatSettings($this->request->post);
+
+            $this->session->data['success'] = $this->language->get('text_success');
+
+            $this->response->redirect($this->url->link('extension/module/chat_nik/chatModule', 'user_token=' . $this->session->data['user_token'], true));
+        }
+
+        $data['breadcrumbs'] = array();
+
+        $data['breadcrumbs'][] = array(
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true)
+        );
+
+        $data['breadcrumbs'][] = array(
+            'text' => $this->language->get('text_extension'),
+            'href' => $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=module', true)
+        );
+
+        $data['breadcrumbs'][] = array(
+            'text' => $this->language->get('heading_title'),
+            'href' => $this->url->link('extension/module/chat_nik', 'user_token=' . $this->session->data['user_token'], true)
+        );
+
+        $data['actionMainSettings'] = $this->url->link('extension/module/chat_nik/chatModule', 'user_token=' . $this->session->data['user_token'], true);
+
+        $data['cancel'] = $this->url->link('extension/module/chat_nik', 'user_token=' . $this->session->data['user_token'] . '&type=module', true);
+
+        $data['mainSettingsLink'] = $this->url->link('extension/module/chat_nik/chatModule', 'user_token=' . $this->session->data['user_token'] . '&verticalTab=mainSettings', true);
+        $data['viewDesignChatLink'] = $this->url->link('extension/module/chat_nik/chatModule', 'user_token=' . $this->session->data['user_token'] . '&verticalTab=viewDesignChat', true);
+
+        $data['verticalTab'] = $verticalTab;
+
+        $data['chatSettings'] = $this->model_extension_module_chat_nik->getChatSettings();
+
+        $data['header'] = $this->load->controller('common/header');
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['footer'] = $this->load->controller('common/footer');
+
+        $this->response->setOutput($this->load->view('extension/module/chat_module_nik', $data));
+    }
+
 	public function chatSettings() {
         $this->load->language('extension/module/chat_nik');
 
@@ -67,18 +263,18 @@ class ControllerExtensionModuleChatNik extends Controller {
         $this->load->model('setting/setting');
         $this->load->model('extension/module/chat_nik');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('module_chat_nik', $this->request->post);
-
-            $this->session->data['success'] = $this->language->get('text_success');
-
-            $this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=module', true));
-        }
-
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
         } else {
             $data['error_warning'] = '';
+        }
+
+        if (isset($this->session->data['success'])) {
+            $data['success'] = $this->session->data['success'];
+
+            unset($this->session->data['success']);
+        } else {
+            $data['success'] = '';
         }
 
         $data['breadcrumbs'] = array();
@@ -107,7 +303,6 @@ class ControllerExtensionModuleChatNik extends Controller {
         $data['deleteOperator'] = $this->url->link('extension/module/chat_nik/deleteOperator', 'user_token=' . $this->session->data['user_token'], true);
 
         $operators = $this->model_extension_module_chat_nik->getAllOperators();
-
 
         $this->load->model('tool/image');
 

@@ -36,9 +36,11 @@
     min-width: 500px;
     background-color: #0083C1;
     float: left;
+    min-height: 560px;
   }
   .rightside .rightside-body {
     padding: 5px;
+    min-height: 560px;
   }
   .rightside .rightside-body .rightside-body-button-row {
     padding: 10px;
@@ -96,6 +98,11 @@
     <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
       <button type="button" class="close" data-dismiss="alert">&times;</button>
     </div>
+    {% endif %}
+    {% if success %}
+      <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+      </div>
     {% endif %}
     <div class="panel panel-default">
       <div class="panel-body">

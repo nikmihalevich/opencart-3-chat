@@ -1,0 +1,217 @@
+{{ header }}
+<style>
+  .main-container {
+    height: 500px;
+  }
+  .leftside {
+    width: 35%;
+    min-width: 200px;
+    background-color: #0192D3;
+    float: left;
+  }
+  .leftside .leftside-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 25px;
+    border-bottom: 1px solid #fff;
+    height: 60px;
+  }
+  .leftside .leftside-header span {
+    color: #fff;
+    font-size: 20px;
+  }
+  .leftside .leftside-body {
+    height: 500px;
+    overflow-y: auto;
+  }
+  .leftside .leftside-body .leftside-body-item {
+    padding: 25px;
+    font-size: 17px;
+    color: #fff;
+    background-color: #0172AC;
+    border-bottom: 1px solid #0688C2;
+  }
+  .leftside .leftside-body .leftside-body-item.active {
+    background-color: #00B741;
+  }
+  .rightside {
+    width: 65%;
+    min-width: 500px;
+    background-color: #0083C1;
+    float: left;
+    min-height: 560px;
+  }
+  .rightside .rightside-body {
+    padding: 20px 25px;
+    height: 560px;
+  }
+  .rightside .rightside-body .rightside-body-title {
+    color: #fff;
+    font-size: 16px;
+    padding: 0 0 20px 0;
+  }
+  .rightside .rightside-body .rightside-body-form {
+    /*background-color: #0192D3;*/
+    height: 100%;
+    padding: 10px;
+  }
+  .rightside .rightside-body .rightside-body-button-row {
+    padding: 10px;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .rightside-body-button {
+    background-color: #005E8E;
+    color: #fff;
+    border-radius: 10px;
+    padding: 10px 25px;
+    border: none;
+    margin: 0 5px;
+  }
+  .rightside-body-button.button-light {
+    background-color: #0192D3;
+  }
+  .rightside-body-button:hover {
+    color: #fff;
+  }
+  .rightside .rightside-body .rightside-body-form .form-group + .form-group {
+    border: none;
+  }
+  .rightside .rightside-body .rightside-body-form .form-group label {
+    color: #fff;
+  }
+  .operator-login-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  .operator-login-block-title {
+    margin: 20px 0 10px 0;
+    color: white;
+  }
+  .operator-login-block {
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #0192D3;
+  }
+  .operator-login-input {
+    padding: 10px;
+    border: none;
+    margin: 10px 0;
+    width: 75%;
+  }
+  .operator-login-input:focus {
+    outline: none;
+  }
+  .operator-login-button {
+    background-color: #005E8E;
+    color: #fff;
+    padding: 10px 45px;
+    border: none;
+    margin: 5px 5px 15px 0;
+  }
+  .leftside .leftside-body .leftside-body-item-operator {
+    display: flex;
+    align-items: center;
+  }
+  .leftside .leftside-body .leftside-body-item-operator img {
+    border-radius: 50%;
+    border: 1px solid #fff;
+  }
+  .leftside .leftside-body .leftside-body-item-operator .leftside-body-item-operator-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 30px;
+    font-size: 14px;
+    position: relative;
+  }
+  .leftside .leftside-body .leftside-body-item-operator .leftside-body-item-operator-info .operator-status {
+    font-size: 12px;
+  }
+  .leftside .leftside-body .leftside-body-item-operator .leftside-body-item-operator-info .operator-status.online {
+    color: #00B8EF;
+  }
+  .leftside .leftside-body .leftside-body-item-operator .leftside-body-item-operator-info .operator-status.offline {
+    color: #CC7473;
+  }
+  .unread-message-counts {
+    padding: 3px 8px;
+    background-color: #fff;
+    color: #000;
+    border-radius: 50%;
+    font-size: 12px;
+    position: absolute;
+    right: -30px;
+  }
+</style>
+{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="main-container">
+          <div class="leftside">
+            <div class="leftside-header">
+              <span>{{ text_operators }}</span>
+            </div>
+            <div class="leftside-body">
+              {% for operator in operators %}
+                <div class="leftside-body-item">
+                  <div class="leftside-body-item-operator">
+                    <img src="{{ operator.thumb }}" alt="">
+                    <div class="leftside-body-item-operator-info">
+                      <span class="operator-name">{{ operator.lastname }} {{ operator.firstname }}</span>
+                      <span class="operator-status online">{{ text_online }}</span>
+                      <span class="unread-message-counts">5</span>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="rightside">
+            <div class="rightside-body">
+              <div class="rightside-body-form">
+                <form action="{{ actionLogin }}" method="post" enctype="multipart/form-data" id="form-login" class="operator-login-form">
+                  <div class="operator-login-block">
+                    <div class="operator-login-block-title">{{ text_login_to_start_chat }}</div>
+                    <input type="text" id="operator-login-input" placeholder="{{ entry_login }}" class="operator-login-input">
+                    <input type="password" id="operator-password-input" placeholder="{{ entry_password }}" class="operator-login-input">
+                    <button form="form-login" type="submit" class="operator-login-button">{{ button_login }}</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}
